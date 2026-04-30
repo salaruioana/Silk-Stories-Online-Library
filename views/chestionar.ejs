@@ -1,0 +1,8 @@
+<h1>Chestionar</h1>
+<%for(var i=0; i<intrebari.length;i++){%>
+    <h2><%=intrebari[i].intrebare%></h2>
+    <%for(var j=0; j<intrebari[i].variante.length;j++){%>
+    <p><%=intrebari[i].variante[j]%></p>
+    <input type="radio"<%=intrebari[i].variante[j]%>>
+    <%}%>
+<%}%>
