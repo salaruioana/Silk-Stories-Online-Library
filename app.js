@@ -72,13 +72,39 @@ const listaIntrebari = [
         }
         //... 
     ]; 
+    
     // în fișierul views/chestionar.ejs este accesibilă variabila 'intrebari' care conține vectorul de întrebări 
     res.render('chestionar', {intrebari: listaIntrebari}); 
+    
 }); 
+app.post('/rezultat-chestionar', (req, res) => {
+
+    const listaIntrebari = [
+        { corect: 0 },
+        { corect: 0 },
+        { corect: 0 },
+        { corect: 0 },
+        { corect: 0 },
+        { corect: 0 },
+        { corect: 0 },
+        { corect: 0 },
+        { corect: 0 },
+        { corect: 0 }
+    ];
+
+    let scor = 0;
+
+    for (let i = 0; i < listaIntrebari.length; i++) {
+        if (req.body["q" + i] == listaIntrebari[i].corect) {
+            scor++;
+        }
+    }
+
+    res.render('rezultat', {
+        scor: scor,
+        total: listaIntrebari.length
+    });
+});
  
-app.post('/rezultat-chestionar', (req, res) => { 
-    console.log(req.body); 
-    res.send("formular: " + JSON.stringify(req.body)); 
-}); 
  
 app.listen(port, () => console.log(`Serverul rulează la adresa http://localhost: :${port}/`)); 
