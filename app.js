@@ -1,6 +1,7 @@
 const express = require('express'); 
 const expressLayouts = require('express-ejs-layouts'); 
-const bodyParser = require('body-parser') 
+const bodyParser = require('body-parser');
+const fs = require('fs');
 const app = express(); 
 const port = 6789; 
 // directorul 'views' va conține fișierele .ejs (html + js executat la server) 
@@ -19,90 +20,36 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/', (req, res) => res.send('Hello World')); 
 // la accesarea din browser adresei http://localhost:6789/chestionar se va apela funcția specificată 
 app.get('/chestionar', (req, res) => { 
-const listaIntrebari = [ 
-        { 
-            intrebare: 'Întrebarea 1', 
-            variante: ['varianta 1', 'varianta 2', 'varianta 3', 'varianta 4'], 
-            corect: 0 
-        }, 
-        { 
-            intrebare: 'Întrebarea 2', 
-            variante: ['varianta 1', 'varianta 2', 'varianta 3', 'varianta 4'], 
-            corect: 0 
-        }, 
-        { 
-            intrebare: 'Întrebarea 3', 
-            variante: ['varianta 1', 'varianta 2', 'varianta 3', 'varianta 4'], 
-            corect: 0 
-        }, 
-        { 
-            intrebare: 'Întrebarea 4', 
-            variante: ['varianta 1', 'varianta 2', 'varianta 3', 'varianta 4'], 
-            corect: 0 
-        }, 
-        { 
-            intrebare: 'Întrebarea 5', 
-            variante: ['varianta 1', 'varianta 2', 'varianta 3', 'varianta 4'], 
-            corect: 0 
-        }, 
-        { 
-            intrebare: 'Întrebarea 6', 
-            variante: ['varianta 1', 'varianta 2', 'varianta 3', 'varianta 4'], 
-            corect: 0 
-        }, 
-        { 
-            intrebare: 'Întrebarea 7', 
-            variante: ['varianta 1', 'varianta 2', 'varianta 3', 'varianta 4'], 
-            corect: 0 
-        }, 
-        { 
-            intrebare: 'Întrebarea 8', 
-            variante: ['varianta 1', 'varianta 2', 'varianta 3', 'varianta 4'], 
-            corect: 0 
-        }, 
-        { 
-            intrebare: 'Întrebarea 9', 
-            variante: ['varianta 1', 'varianta 2', 'varianta 3', 'varianta 4'], 
-            corect: 0 
-        }, 
-        { 
-            intrebare: 'Întrebarea 10', 
-            variante: ['varianta 1', 'varianta 2', 'varianta 3', 'varianta 4'], 
-            corect: 0 
+fs.readFile('intrebari.json', 'utf8', (err, data) => {
+        if (err) {
+            return res.send("Eroare la citirea fișierului JSON");
         }
-        //... 
-    ]; 
-    
-    // în fișierul views/chestionar.ejs este accesibilă variabila 'intrebari' care conține vectorul de întrebări 
-    res.render('chestionar', {intrebari: listaIntrebari}); 
-    
+
+        const listaIntrebari = JSON.parse(data);
+        // în fișierul views/chestionar.ejs este accesibilă variabila 'intrebari' care conține vectorul de întrebări 
+        res.render('chestionar', { intrebari: listaIntrebari });
+    });
 }); 
 app.post('/rezultat-chestionar', (req, res) => {
-
-    const listaIntrebari = [
-        { corect: 0 },
-        { corect: 0 },
-        { corect: 0 },
-        { corect: 0 },
-        { corect: 0 },
-        { corect: 0 },
-        { corect: 0 },
-        { corect: 0 },
-        { corect: 0 },
-        { corect: 0 }
-    ];
-
-    let scor = 0;
-
-    for (let i = 0; i < listaIntrebari.length; i++) {
-        if (req.body["q" + i] == listaIntrebari[i].corect) {
-            scor++;
+     fs.readFile('intrebari.json', 'utf8', (err, data) => {
+        if (err) {
+            return res.send("Eroare la citirea fișierului JSON");
         }
-    }
 
-    res.render('rezultat', {
-        scor: scor,
-        total: listaIntrebari.length
+        const listaIntrebari = JSON.parse(data);
+
+        let scor = 0;
+
+        for (let i = 0; i < listaIntrebari.length; i++) {
+            if (req.body["q" + i] == listaIntrebari[i].corect) {
+                scor++;
+            }
+        }
+
+        res.render('rezultat', {
+            scor: scor,
+            total: listaIntrebari.length
+        });
     });
 });
  

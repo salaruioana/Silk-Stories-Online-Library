@@ -1,0 +1,52 @@
+[
+    {
+        "intrebare": "Întrebarea 1",
+        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
+        "corect": 0
+    },
+    {
+        "intrebare": "Întrebarea 2",
+        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
+        "corect": 0
+    },
+    {
+        "intrebare": "Întrebarea 3",
+        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
+        "corect": 0
+    },
+    {
+        "intrebare": "Întrebarea 4",
+        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
+        "corect": 0
+    },
+    {
+        "intrebare": "Întrebarea 5",
+        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
+        "corect": 0
+    },
+    {
+        "intrebare": "Întrebarea 6",
+        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
+        "corect": 0
+    },
+    {
+        "intrebare": "Întrebarea 7",
+        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
+        "corect": 0
+    },
+    {
+        "intrebare": "Întrebarea 8",
+        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
+        "corect": 0
+    },
+    {
+        "intrebare": "Întrebarea 9",
+        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
+        "corect": 0
+    },
+    {
+        "intrebare": "Întrebarea 10",
+        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
+        "corect": 0
+    }
+]
