@@ -1,52 +1,102 @@
 [
     {
-        "intrebare": "Întrebarea 1",
-        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
+        "intrebare": "Cine a scris romanul „Frații Karamazov”?",
+        "variante": [
+            "Ivan Turgheniev",
+            "Nikolai Gogol",
+            "Fiodor Dostoievski ",
+            "Lev Tolstoi"
+        ],
+        "corect": 2
+    },
+    {
+        "intrebare": "Care sunt cele patru fiice ale familiei March din „Little Women”?",
+        "variante": [
+            "Jane, Elizabeth, Mary, Lydia",
+            "Jo, Meg, Beth, Amy ",
+            "Meg, Elizabeth, Amy, Rose",
+            "Jane, Jo, Rose, Kitty"
+        ],
+        "corect": 1
+    },
+    {
+        "intrebare": "Ai văzut un gândac în cameră. La ce autor te gândești?",
+        "variante": [
+            "Franz Kafka",
+            "Jean-Paul Sartre",
+            "Albert Camus",
+            "Haruki Murakami"
+        ],
         "corect": 0
     },
     {
-        "intrebare": "Întrebarea 2",
-        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
+        "intrebare": "Care este celebrul citat ce deschide „Anna Karenina”?",
+        "variante": [
+            "„Nu există măreție acolo unde nu este simplitate.”",
+            "„Viața ta aparține doar ție.”",
+            "„Fericirea nu este altceva decât binele în mișcare.”",
+            "„Toate familiile fericite seamănă între ele, fiecare familie nefericită este nefericită în felul ei.”"
+        ],
+        "corect": 3
+    },
+    {
+        "intrebare": "Sylvia Plath vede viața și posibilitățile ei în metafora…",
+        "variante": [
+            "un smochin ",
+            "o scară infinită",
+            "un labirint",
+            "o salcie"
+        ],
         "corect": 0
     },
     {
-        "intrebare": "Întrebarea 3",
-        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
-        "corect": 0
+    "intrebare": "Cine este personajul cunoscut pentru discursurile sale lungi, moralizatoare și pentru propunerea de căsătorie stânjenitoare din „Pride and Prejudice”?",
+    "variante": [
+        "Mr. Collins",            
+        "Mr. Bingley",
+        "Mr. Darcy",
+        "Mr. Wickham"
+    ],
+    "corect": 0
+},
+    {
+        "intrebare": "În romanul lui Stephen King „The Shining”, cum se numește hotelul unde are loc acțiunea?",
+        "variante": [
+            "Winterfall Resort",
+            "Redrum Inn",
+            "Overlook Hotel",
+            "The Silent Pines Hotel"
+        ],
+        "corect": 2
     },
     {
-        "intrebare": "Întrebarea 4",
-        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
-        "corect": 0
+        "intrebare": "Cum reflectă portretul lui Dorian Gray evoluția vieții sale, pe măsură ce acesta se cufundă în plăceri și comportamente imorale?",
+        "variante": [
+            "Portretul rămâne neschimbat, în timp ce Dorian îmbătrânește accelerat.",
+            "Portretul îmbătrânește, se schimonosește și se degradează în locul lui Dorian.",     
+            "Portretul se luminează treptat, simbolizând purificarea sufletului său.",
+            "Portretul se transformă periodic într-o imagine a celor care îl influențează."
+        ],
+        "corect": 1
     },
     {
-        "intrebare": "Întrebarea 5",
-        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
-        "corect": 0
+        "intrebare": "În seria „Harry Potter”, ce formă are patronusul lui Harry?",
+        "variante": [
+            "Lup",
+            "Phoenix",
+            "Hippogriff",
+            "Cerb"
+        ],
+        "corect": 3
     },
     {
-        "intrebare": "Întrebarea 6",
-        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
-        "corect": 0
-    },
-    {
-        "intrebare": "Întrebarea 7",
-        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
-        "corect": 0
-    },
-    {
-        "intrebare": "Întrebarea 8",
-        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
-        "corect": 0
-    },
-    {
-        "intrebare": "Întrebarea 9",
-        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
-        "corect": 0
-    },
-    {
-        "intrebare": "Întrebarea 10",
-        "variante": ["varianta 1", "varianta 2", "varianta 3", "varianta 4"],
-        "corect": 0
+        "intrebare": "În „The Great Gatsby”, ce simbolizează lumina verde?",
+        "variante": [
+            "Trecerea timpului",
+            "Renașterea morală",
+            "Corupția și decadența",
+            "Visul american și dorința de neatins"
+        ],
+        "corect": 3
     }
 ]
