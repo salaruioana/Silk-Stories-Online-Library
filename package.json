@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "body-parser": "^2.2.2",
+    "cookie-parser": "^1.4.7",
     "ejs": "^5.0.2",
     "express": "^5.2.1",
     "express-ejs-layouts": "^2.5.1"

@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Index</title>
+        <title>Home</title>
     </head>
     <body>
+         <% if(utilizator) { %>
+            <h1>Bine ai venit, <%= utilizator %>!</h1>
+        <% } %>
         <a href="/autentificare">Autentificare</a>
     </body>
 </html>

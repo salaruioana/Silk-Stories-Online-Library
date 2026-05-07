@@ -1,27 +1,44 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Autentificare</title>
 </head>
+
 <body>
 
     <h1>Autentificare</h1>
 
-    <form action="/verificare-autentificare" method="POST">
-        
-        <label for="utilizator">Utilizator:</label>
-        <input type="text" id="utilizator" name="utilizator" required>
-        
-        <br><br>
+    <% if(mesajEroare) { %>
 
-        <label for="parola">Parola:</label>
-        <input type="password" id="parola" name="parola" required>
+        <p style="color:red;">
+            <%= mesajEroare %>
+        </p>
 
-        <br><br>
+        <% } %>
 
-        <button type="submit">Autentificare</button>
+            <form action="/verificare-autentificare" method="POST">
 
-    </form>
+                <label>
+                    Utilizator:
+                    <input type="text" name="utilizator">
+                </label>
+
+                <br><br>
+
+                <label>
+                    Parola:
+                    <input type="password" name="parola">
+                </label>
+
+                <br><br>
+
+                <button type="submit">
+                    Autentificare
+                </button>
+
+            </form>
 
 </body>
+
 </html>
