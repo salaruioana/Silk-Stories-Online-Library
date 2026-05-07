@@ -1,0 +1,101 @@
+:root {
+    --royal-orchid: #7C428C;
+    --moss-green: #588333;
+    --sky-mist: #B0D5E8;
+    --lavender-blue: #6E72BB;
+    --sunbeam-yellow: #F4F28E;
+
+    --paper: #F6F1E8;
+    --text: #2E2A25;
+}
+
+body {
+    /*background: var(--sky-mist);*/
+    background: 
+        linear-gradient(rgba(240, 244, 232, 0.7), rgba(203, 208, 191, 0.6)),
+        url('/images/fundal.jpg') center/cover no-repeat fixed;
+    color: var(--text);
+    font-family: 'Federo', serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    color: var(--paper);
+    margin: 30px 0;
+    font-size: 3rem;
+    color:var(--royal-orchid);
+    text-align: center;
+}
+
+form {
+    width: 100%;
+    max-width: 780px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.question-card {
+    background: white;
+    border-radius: 14px;
+    padding: 18px;
+    border-left: 6px solid var(--moss-green);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.question-card h2 {
+    color: var(--lavender-blue);
+    margin-bottom: 10px;
+}
+
+.answers {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.answer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: var(--lavender-blue);
+    transition: 0.2s;
+    color: var(--paper);
+    cursor: pointer;
+}
+
+.answer:hover {
+    background: var(--sunbeam-yellow);
+    color: var(--text)
+}
+
+input[type="radio"] {
+    accent-color: var(--royal-orchid);
+}
+
+button {
+    background: var(--royal-orchid);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: var(--lavender-blue);
+}
+
+.result-box {
+    background: var(--moss-green);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+}
