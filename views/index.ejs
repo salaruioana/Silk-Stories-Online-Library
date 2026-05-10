@@ -1,12 +1,25 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Home</title>
-    </head>
-    <body>
-         <% if(utilizator) { %>
-            <h1>Bine ai venit, <%= utilizator %>!</h1>
-        <% } %>
-        <a href="/autentificare">Autentificare</a>
-    </body>
+<head>
+    <title>Home</title>
+</head>
+<body>
+
+    <% if (utilizator) { %>
+
+        <h1>Autentificat ca <%= utilizator.prenume %> <%= utilizator.nume %></h1>
+        <a href="/logout"><button>Logout</button></a>
+
+    <% } else { %>
+
+        <h1>Bun venit pe site!</h1>
+        <a href="/autentificare"><button>Autentificare</button></a>
+
+    <% } %>
+
+    <br><br>
+
+    <a href="/chestionar"><button>Chestionar</button></a>
+
+</body>
 </html>
