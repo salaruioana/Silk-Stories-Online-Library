@@ -3,6 +3,7 @@ const expressLayouts = require('express-ejs-layouts');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const fs = require('fs');
+const mysql = require('mysql');
 const app = express(); 
 const port = 6789;
 const session = require('express-session'); 
@@ -83,6 +84,102 @@ app.get('/logout', (req,res)=>{
     req.session.destroy();
     res.redirect('/autentificare');
 })
+app.get('/creare-bd', (req, res) => {
+    const con = mysql.createConnection({
+        host: "localhost",
+        user: "root",
+        password: ""
+    });
+
+    con.connect(function (err) {
+        if (err) throw err;
+        console.log("Connected");
+
+        con.query("CREATE DATABASE IF NOT EXISTS cumparaturi", function (err, result) {
+            if (err) throw err;
+            console.log("Database 'cumparaturi' creată");
+
+            con.query("USE cumparaturi");
+
+            const sqlTabel = `
+                CREATE TABLE IF NOT EXISTS produse (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    titlu VARCHAR(100) NOT NULL,
+                    autor VARCHAR(100) NOT NULL,
+                    anAparitie DECIMAL(4) NOT NULL,
+                    pret DECIMAL(10,2) NOT NULL
+                )
+            `;
+
+            con.query(sqlTabel, function (err, result) {
+                if (err) throw err;
+                console.log("Tabel 'produse' creat");
+            });
+        });
+    });
+
+    res.redirect('/');
+});
+app.get('/inserare-bd', (req, res) => {
+
+    const con = mysql.createConnection({
+        host: "localhost",
+        user: "root",
+        password: "",
+        database: "cumparaturi"
+    });
+
+    con.connect(function (err) {
+        if (err) throw err;
+        console.log("Conectat la baza de date!");
+
+        const carti = [
+            ["1984", "George Orwell", 1949, 39.99],
+            ["Harry Potter și Piatra Filozofală", "J.K. Rowling", 1997, 44.90],
+            ["Mândrie și Prejudecată", "Jane Austen", 1813, 29.50],
+            ["Micul Prinț", "Antoine de Saint-Exupéry", 1943, 24.99],
+            ["Stăpânul Inelelor: Frăția Inelului", "J.R.R. Tolkien", 1954, 59.99],
+            ["Hobbitul", "J.R.R. Tolkien", 1937, 34.99],
+            ["Fahrenheit 451", "Ray Bradbury", 1953, 36.50],
+            ["Crimă și Pedepasă", "F.M. Dostoievski", 1866, 32.00],
+            ["Jocurile Foamei", "Suzanne Collins", 2008,  41.00],
+            ["Dune", "Frank Herbert", 1965, 55.00]
+        ];
+
+        const sql = "INSERT INTO produse (titlu, autor, anAparitie, pret) VALUES ?";
+
+        con.query(sql, [carti], function (err, result) {
+            if (err) throw err;
+
+            console.log("Au fost inserate " + result.affectedRows + " cărți.");
+            res.redirect('/');
+        });
+    });
+});
+app.get('/stergere-bd', (req, res) => {
+
+    const con = mysql.createConnection({
+        host: "localhost",
+        user: "root",
+        password: "",
+        database: "cumparaturi"
+    });
+
+    con.connect(function (err) {
+        if (err) throw err;
+        console.log("Conectat la baza de date!");
+
+        const sql = "DROP TABLE produse";
+
+        con.query(sql, function (err, result) {
+            if (err) throw err;
+
+            console.log("Au fost șterse toate produsele!");
+
+            res.redirect('/');
+        });
+    });
+});
 app.post('/verificare-autentificare', (req, res) => {
     const utilizator = req.body.utilizator;
     const parola = req.body.parola;
