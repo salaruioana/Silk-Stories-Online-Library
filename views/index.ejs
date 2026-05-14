@@ -1,37 +1,89 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Home</title>
 </head>
+
 <body>
 
     <% if (utilizator) { %>
 
-        <h1>Autentificat ca <%= utilizator.prenume %> <%= utilizator.nume %></h1>
+        <h1>Autentificat ca <%= utilizator.prenume %>
+                <%= utilizator.nume %>
+        </h1>
         <a href="/logout"><button>Logout</button></a>
 
+        <% } else { %>
+
+            <h1>Bun venit pe site!</h1>
+            <a href="/autentificare"><button>Autentificare</button></a>
+
+            <% } %>
+
+
+                <a href="/chestionar"><button>Chestionar</button></a>
+
+
+                <a href="/creare-bd"><button>Creare BD</button></a>
+
+                <a href="/inserare-bd"><button>Încărcare BD</button></a>
+
+
+                <a href="/stergere-bd"><button>Stergere BD</button></a>
+
+                <h2 class="table-title">Lista cărți</h2>
+
+                <div class="table-container">
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Titlu</th>
+                                <th>Autor</th>
+                                <th>An</th>
+                                <th>Preț</th>
+                                <th>Adaugă în coș</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <% if (produse && produse.length> 0) { %>
+                                <% produse.forEach(p=> { %>
+                                    <tr>
+                                        <td>
+                                            <%= p.titlu %>
+                                        </td>
+                                        <td>
+                                            <%= p.autor %>
+                                        </td>
+                                        <td>
+                                            <%= p.anAparitie %>
+                                        </td>
+                                        <td>
+                                            <%= p.pret %> lei
+                                        </td>
+                                        <td>
+    <% if (utilizator) { %>
+        <a href="/adaugare_cos?id=<%= p.id %>">
+            <button>Adaugă</button>
+        </a>
     <% } else { %>
-
-        <h1>Bun venit pe site!</h1>
-        <a href="/autentificare"><button>Autentificare</button></a>
-
+        <button disabled>Login necesar</button>
     <% } %>
+</td>
+                                    </tr>
+                                    <% }) %>
+                                        <% } else { %>
+                                            <tr>
+                                                <td>Nu există produse în baza de date</td>
+                                            </tr>
+                                            <% } %>
+                        </tbody>
+                    </table>
 
-    <br><br>
-
-    <a href="/chestionar"><button>Chestionar</button></a>
-
-    <br><br>
-
-    <a href="/creare-bd"><button>Creare BD</button></a>
-
-    <br><br>
-
-    <a href="/inserare-bd"><button>Încărcare BD</button></a>
-
-    <br><br>
-
-    <a href="/stergere-bd"><button>Stergere BD</button></a>
+                </div>
 
 </body>
+
 </html>

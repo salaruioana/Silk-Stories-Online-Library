@@ -27,7 +27,38 @@ app.use((req, res, next) => {
     next();
 });
 app.get('/', (req, res) => {
-    res.render('index',{ utilizator: req.session.utilizator});
+
+    const con = mysql.createConnection({
+        host: "localhost",
+        user: "root",
+        password: "",
+        database: "cumparaturi"
+    });
+
+    con.connect(function (err) {
+
+        if (err) {
+            return res.render('index', {
+                utilizator: req.session.utilizator,
+                produse: []
+            });
+        }
+
+        con.query("SELECT * FROM produse", function (err, result) {
+
+            if (err) {
+                return res.render('index', {
+                    utilizator: req.session.utilizator,
+                    produse: []
+                });
+            }
+
+            res.render('index', {
+                utilizator: req.session.utilizator,
+                produse: result || []
+            });
+        });
+    });
 });
 // la accesarea din browser adresei http://localhost:6789/chestionar se va apela funcția specificată 
 app.get('/chestionar', (req, res) => {

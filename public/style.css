@@ -9,6 +9,10 @@
     --text: #2E2A25;
 }
 
+* {
+    font-family: 'Federo', serif;
+}
+
 body {
     /*background: var(--sky-mist);*/
     background: 
@@ -98,4 +102,61 @@ button:hover {
     padding: 20px;
     border-radius: 12px;
     text-align: center;
+}
+
+table {
+    width: 90%;
+    max-width: 900px;
+    margin: 40px auto;
+    border-collapse: collapse;
+    background: var(--paper);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+/* header tabel */
+thead {
+    background: var(--royal-orchid);
+    color: white;
+}
+
+th {
+    padding: 14px;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+}
+
+/* celule */
+td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    color: var(--text);
+}
+
+/* rânduri alternante */
+tbody tr:nth-child(even) {
+    background: rgba(176, 213, 232, 0.25); /* sky-mist transparent */
+}
+
+tbody tr:hover {
+    background: var(--sunbeam-yellow);
+    transition: 0.2s;
+}
+
+/* container tabel (centrare + spacing) */
+.table-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* titlu deasupra tabelului */
+.table-title {
+    color: var(--royal-orchid);
+    font-size: 2rem;
+    margin-top: 20px;
 }
