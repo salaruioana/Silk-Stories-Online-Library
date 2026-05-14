@@ -64,14 +64,14 @@
                                             <%= p.pret %> lei
                                         </td>
                                         <td>
-    <% if (utilizator) { %>
-        <a href="/adaugare-cos?id=<%= p.id %>">
-            <button>Adaugă</button>
-        </a>
-    <% } else { %>
-        <button disabled>Login necesar</button>
-    <% } %>
-</td>
+                                            <% if (utilizator) { %>
+                                                <a href="/adaugare-cos?id=<%= p.id %>">
+                                                    <button>Adaugă</button>
+                                                </a>
+                                                <% } else { %>
+                                                    <button disabled>Login necesar</button>
+                                                    <% } %>
+                                        </td>
                                     </tr>
                                     <% }) %>
                                         <% } else { %>
