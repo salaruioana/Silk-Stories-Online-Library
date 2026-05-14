@@ -211,6 +211,23 @@ app.get('/stergere-bd', (req, res) => {
         });
     });
 });
+
+app.get('/adaugare-cos',(req,res)=>{
+    if(!req.session.utilizator){
+        return res.redirect('/autentificare');
+    }
+    const idProdus = parseInt(req.query.id);
+
+    if(!req.session.cos){
+        req.session.cos = [];
+    }
+
+    req.session.cos.push(idProdus);
+
+    console.log("Coș:", req.session.cos);
+
+    res.redirect('/');
+});
 app.post('/verificare-autentificare', (req, res) => {
     const utilizator = req.body.utilizator;
     const parola = req.body.parola;
