@@ -1,44 +1,18 @@
-<!DOCTYPE html>
-<html>
+<h2>Autentificare</h2>
 
-<head>
-    <title>Autentificare</title>
-</head>
+<% if (mesajEroare) { %>
+    <p style="color:red;"><%= mesajEroare %></p>
+<% } %>
 
-<body>
+<form action="/verificare-autentificare" method="POST">
+    <label>
+        Utilizator:
+        <input type="text" name="utilizator" autocomplete="off">
+    </label>
+    <label>
+        Parola:
+        <input type="password" name="parola" autocomplete="new-password">
+    </label>
 
-    <h1>Autentificare</h1>
-
-    <% if(mesajEroare) { %>
-
-        <p style="color:red;">
-            <%= mesajEroare %>
-        </p>
-
-        <% } %>
-
-            <form action="/verificare-autentificare" method="POST">
-
-                <label>
-                    Utilizator:
-                    <input type="text" name="utilizator" autocomplete="off">
-                </label>
-
-                <br><br>
-
-                <label>
-                    Parola:
-                    <input type="password" name="parola" autocomplete="new-password">
-                </label>
-
-                <br><br>
-
-                <button type="submit">
-                    Autentificare
-                </button>
-
-            </form>
-
-</body>
-
-</html>
+    <button type="submit">Autentificare</button>
+</form>

@@ -4,42 +4,44 @@
     --sky-mist: #B0D5E8;
     --lavender-blue: #6E72BB;
     --sunbeam-yellow: #F4F28E;
-
     --paper: #F6F1E8;
     --text: #2E2A25;
 }
 
 * {
     font-family: 'Federo', serif;
+    box-sizing: border-box;
 }
 
 body {
-    /*background: var(--sky-mist);*/
-    background: 
-        linear-gradient(rgba(240, 244, 232, 0.7), rgba(203, 208, 191, 0.6)),
-        url('/images/fundal.jpg') center/cover no-repeat fixed;
+    background: linear-gradient(rgba(240, 244, 232, 0.7), rgba(203, 208, 191, 0.6)),
+                url('/images/fundal.jpg') center/cover no-repeat fixed;
     color: var(--text);
-    font-family: 'Federo', serif;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-h1 {
-    color: var(--paper);
-    margin: 30px 0;
-    font-size: 3rem;
-    color:var(--royal-orchid);
-    text-align: center;
-}
+h1 { color: var(--royal-orchid); font-size: 3rem; text-align: center; margin: 20px 0; }
+h2 { color: var(--lavender-blue); margin-bottom: 10px; }
 
-form {
-    width: 100%;
-    max-width: 780px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
+
+p { color: var(--royal-orchid); font-style: italic; font-size: 0.95rem; text-align: right; }
+
+button {
+    background: var(--royal-orchid);
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
 }
+button:hover { background: var(--lavender-blue); }
+button:disabled { background: #aaa; cursor: default; }
+
+form { width: 100%; max-width: 780px; display: flex; flex-direction: column; gap: 18px; }
 
 .question-card {
     background: white;
@@ -49,17 +51,6 @@ form {
     box-shadow: 0 6px 18px rgba(0,0,0,0.06);
 }
 
-.question-card h2 {
-    color: var(--lavender-blue);
-    margin-bottom: 10px;
-}
-
-.answers {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
 .answer {
     display: flex;
     align-items: center;
@@ -67,96 +58,36 @@ form {
     padding: 10px 12px;
     border-radius: 10px;
     background: var(--lavender-blue);
-    transition: 0.2s;
     color: var(--paper);
     cursor: pointer;
+    transition: background 0.2s, color 0.2s;
 }
+.answer:hover { background: var(--sunbeam-yellow); color: var(--text); }
+.answers { display: flex; flex-direction: column; gap: 8px; }
+input[type="radio"] { accent-color: var(--royal-orchid); }
 
-.answer:hover {
-    background: var(--sunbeam-yellow);
-    color: var(--text)
-}
-
-input[type="radio"] {
-    accent-color: var(--royal-orchid);
-}
-
-button {
-    background: var(--royal-orchid);
-    color: white;
-    border: none;
-    padding: 14px;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-button:hover {
-    background: var(--lavender-blue);
-}
-
-.result-box {
-    background: var(--moss-green);
-    color: white;
-    padding: 20px;
-    border-radius: 12px;
-    text-align: center;
-}
+.result-box p{ background: var(--moss-green); color: white; padding: 20px; border-radius: 12px; text-align: center; }
 
 table {
     width: 90%;
     max-width: 900px;
-    margin: 40px auto;
+    margin: 30px auto;
     border-collapse: collapse;
     background: var(--paper);
     border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.08);
     text-align: center;
 }
+thead { background: var(--royal-orchid); color: white; }
+th { padding: 14px; letter-spacing: 0.5px; }
+td { padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.08); }
+tbody tr:nth-child(even) { background: rgba(176, 213, 232, 0.25); }
+tbody tr:hover { background: var(--sunbeam-yellow); transition: background 0.2s; }
+tfoot td { background: var(--paper); font-weight: bold; border-top: 2px solid var(--royal-orchid); }
 
-/* header tabel */
-thead {
-    background: var(--royal-orchid);
-    color: white;
-}
+.table-container { width: 100%; display: flex; flex-direction: column; align-items: center; }
+.table-title { color: var(--royal-orchid); font-size: 2rem; margin-top: 20px; }
 
-th {
-    padding: 14px;
-    font-size: 1rem;
-    letter-spacing: 0.5px;
-}
-
-/* celule */
-td {
-    padding: 12px;
-    border-bottom: 1px solid rgba(0,0,0,0.08);
-    color: var(--text);
-}
-
-/* rânduri alternante */
-tbody tr:nth-child(even) {
-    background: rgba(176, 213, 232, 0.25); /* sky-mist transparent */
-}
-
-tbody tr:hover {
-    background: var(--sunbeam-yellow);
-    transition: 0.2s;
-}
-
-/* container tabel (centrare + spacing) */
-.table-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-/* titlu deasupra tabelului */
-.table-title {
-    color: var(--royal-orchid);
-    font-size: 2rem;
-    margin-top: 20px;
-}
+.header-top { display: flex; align-items: center; gap: 16px; }
+.header-img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }

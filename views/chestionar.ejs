@@ -1,27 +1,18 @@
 <h1>Chestionar despre cărți celebre</h1>
 
 <form action="/rezultat-chestionar" method="POST">
-
-<% for (var i = 0; i < intrebari.length; i++) { %>
-
-    <div class="question-card">
-
-        <h2><%= intrebari[i].intrebare %></h2>
-
-        <div class="answers">
-        <% for (var j = 0; j < intrebari[i].variante.length; j++) { %>
-
-            <label class="answer">
-                <input type="radio" name="q<%= i %>" value="<%= j %>">
-                <span><%= intrebari[i].variante[j] %></span>
-            </label>
-
-        <% } %>
+    <% for (var i = 0; i < intrebari.length; i++) { %>
+        <div class="question-card">
+            <h2><%= intrebari[i].intrebare %></h2>
+            <div class="answers">
+                <% for (var j = 0; j < intrebari[i].variante.length; j++) { %>
+                    <label class="answer">
+                        <input type="radio" name="q<%= i %>" value="<%= j %>">
+                        <span><%= intrebari[i].variante[j] %></span>
+                    </label>
+                <% } %>
+            </div>
         </div>
-
-    </div>
-
-<% } %>
-
+    <% } %>
     <button type="submit">Trimite</button>
 </form>

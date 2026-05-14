@@ -1,0 +1,39 @@
+<h2 class="table-title">Coș de cumpărături</h2>
+
+<div class="table-container">
+    <% let total = 0; %>
+    <% produse.forEach(p => { total += p.pret * cos[String(p.id)]; }); %>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Titlu</th>
+                <th>Autor</th>
+                <th>Cantitate</th>
+                <th>Preț total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (produse && produse.length > 0) { %>
+                <% produse.forEach(p => { %>
+                    <tr>
+                        <td><%= p.titlu %></td>
+                        <td><%= p.autor %></td>
+                        <td><%= cos[String(p.id)] %>x</td>
+                        <td><%= (p.pret * cos[String(p.id)]).toFixed(2) %> lei</td>
+                    </tr>
+                <% }) %>
+            <% } else { %>
+                <tr>
+                    <td colspan="4" style="text-align:center;">Coșul tău este gol 🛒</td>
+                </tr>
+            <% } %>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3"><strong>Total</strong></td>
+                <td><strong><%= total.toFixed(2) %> lei</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

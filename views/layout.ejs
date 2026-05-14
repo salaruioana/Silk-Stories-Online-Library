@@ -1,15 +1,50 @@
 <html>
-    <head>
-        <title>Hello  world</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Gravitas+One&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="/style.css">
-    </head>
-    <body>
-        <main>
-            <%-body %>
-        </main>
-    </body>
-    
+
+<head>
+    <title>BookShop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gravitas+One&family=Instrument+Serif:ital@0;1&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="header-top">
+            <img id="header-img" src="/images/books.png" alt="BookShop" class="header-img">
+            <h1 class="site-title">BookShop</h1>
+        </div>
+
+        <p>
+            <% if (typeof utilizator !=='undefined' && utilizator) { %>
+                Autentificat ca <strong>
+                    <%= utilizator.prenume %>
+                        <%= utilizator.nume %>
+                </strong>
+                <% } %>
+        </p>
+
+        <nav>
+            <a href="/"><button>Acasă</button></a>
+            <a href="/chestionar"><button>Chestionar</button></a>
+            <a href="/vizualizare-cos"><button>Coș</button></a>
+            <a href="/creare-bd"><button>Creare BD</button></a>
+            <a href="/inserare-bd"><button>Încărcare BD</button></a>
+            <a href="/stergere-bd"><button>Ștergere BD</button></a>
+            <% if (typeof utilizator !=='undefined' && utilizator) { %>
+                <a href="/logout"><button>Logout</button></a>
+                <% } else { %>
+                    <a href="/autentificare"><button>Autentificare</button></a>
+                    <% } %>
+        </nav>
+    </header>
+
+    <main>
+        <%- body %>
+    </main>
+
+</body>
+
 </html>
