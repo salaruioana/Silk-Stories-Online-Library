@@ -6,6 +6,8 @@ const fs = require('fs');
 const mysql = require('mysql');
 const app = express();
 const port = 6789;
+const validator = require('validator');
+const bcrypt = require('bcrypt');
 const session = require('express-session');
 
 const con = mysql.createConnection({
@@ -36,7 +38,7 @@ app.use((req, res, next) => {
 
 app.get('/', (req, res) => {
 
-    con.query("SELECT * FROM produse", function (err, result) {
+    con.query("SELECT * FROM produse",[], function (err, result) {
 
         if (err) {
             con.end();
@@ -102,6 +104,8 @@ app.post('/rezultat-chestionar', (req, res) => {
         });
     });
 });
+
+
 
 app.get('/autentificare', (req, res) => {
     if (req.session.utilizator) {
@@ -169,6 +173,7 @@ app.get('/inserare-bd', (req, res) => {
         ["Dune", "Frank Herbert", 1965, 55.00]
     ];
 
+
     const sql = "INSERT INTO produse (titlu, autor, anAparitie, pret) VALUES ?";
 
     con.query(sql, [carti], function (err, result) {
@@ -207,9 +212,19 @@ app.get('/adaugare-cos', (req, res) => {
     res.redirect('/');
 });
 
+function sanitizeInput(input) {
+    if (typeof input !== "string") return "";
+    return validator.escape(validator.trim(input));
+}
+
 app.post('/verificare-autentificare', (req, res) => {
-    const utilizator = req.body.utilizator;
+    const utilizator = sanitizeInput(req.body.utilizator);
     const parola = req.body.parola;
+
+     if (!utilizator || !parola) {
+        req.session.mesajEroare = "Date invalide";
+        return res.redirect('/autentificare');
+    }
 
     fs.readFile('resurse/utilizatori.json', 'utf8', (err, data) => {
         if (err) return res.send("Eroare fisier");
@@ -217,20 +232,38 @@ app.post('/verificare-autentificare', (req, res) => {
         const utilizatori = JSON.parse(data);
 
         const userGasit = utilizatori.find(u =>
-            u.utilizator === utilizator && u.parola === parola
-        );
+            u.utilizator === utilizator);
 
-        if (userGasit) {
-            delete userGasit.parola;
-            req.session.utilizator = userGasit;
-            req.session.mesajEroare = null;
-            return res.redirect('/');
-        } else {
+        
+        if (!userGasit) {
             req.session.mesajEroare = "Utilizator sau parola incorecta";
             return res.redirect('/autentificare');
         }
+
+        try {
+            const match = await bcrypt.compare(parola, userGasit.parola);
+
+            if (match) {
+                req.session.utilizator = {
+                    utilizator: userGasit.utilizator,
+                    nume: userGasit.nume,
+                    prenume: userGasit.prenume
+                };
+
+                req.session.mesajEroare = null;
+                return res.redirect('/');
+            } else {
+                req.session.mesajEroare = "Utilizator sau parola incorecta";
+                return res.redirect('/autentificare');
+            }
+
+        } catch (e) {
+            return res.send("Eroare bcrypt");
+        }
     });
 });
+
+
 
 app.get('/vizualizare-cos', (req, res) => {
 
