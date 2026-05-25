@@ -470,11 +470,3 @@ app.use((req, res) => {
 app.listen(port, () =>
     console.log(`Serverul rulează la adresa http://localhost:${port}/`)
 );
-
-// var x = new Map() - stochez data data pana la care are ban, numarul de incercari esuate
-//tema 3: folosim un middleware ca sa aflam ip-ul app.use((req,res,next)=>{
-//                                                          const ip = req.ip;
-//                                                          Console.log("am intrat in middleware")
-//                                                          next()               })
-// app.all('*',(req,res)) ->aici ii dau ban
-//
