@@ -133,6 +133,8 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (req, res) => {
+    const mesajCos = req.session.mesajCos || null;
+    req.session.mesajCos = null;
 
     con.query("SELECT * FROM produse",[], function (err, result) {
 
@@ -146,7 +148,8 @@ app.get('/', (req, res) => {
 
         res.render('index', {
             utilizator: req.session.utilizator,
-            produse: result || []
+            produse: result || [],
+            mesajCos: mesajCos
         });
     });
 });
@@ -295,6 +298,7 @@ app.get('/adaugare-cos', (req, res) => {
 
     console.log("Coș:", req.session.cos);
 
+    req.session.mesajCos = "Produsul a fost adăugat în coș!";
     res.redirect('/');
 });
 

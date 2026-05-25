@@ -1,5 +1,10 @@
 <h2 class="table-title">Cărțile lunii</h2>
 
+<% if (mesajCos) { %>
+    <p class="succes-msg">
+        ✓ <%= mesajCos %>
+    </p>
+<% } %>
 <div class="carti-grid">
     <% if (produse && produse.length > 0) { %>
         <% produse.forEach(p => { %>
