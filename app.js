@@ -139,7 +139,7 @@ app.get('/', (req, res) => {
     con.query("SELECT * FROM produse",[], function (err, result) {
 
         if (err) {
-            con.end();
+            console.log(err)
             return res.render('index', {
                 utilizator: req.session.utilizator,
                 produse: []
