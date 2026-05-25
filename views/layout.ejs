@@ -1,11 +1,7 @@
 <html>
 
 <head>
-    <title>BookShop</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Gravitas+One&family=Instrument+Serif:ital@0;1&display=swap"
-        rel="stylesheet">
+    <title>Silk & Stories</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 
@@ -14,7 +10,7 @@
     <header>
         <div class="header-top">
             <img id="header-img" src="/images/books.png" alt="BookShop" class="header-img">
-            <h1 class="site-title">BookShop</h1>
+            <h1 class="site-title">Silk & Stories</h1>
         </div>
 
         <p>
@@ -38,12 +34,20 @@
                 <% } else { %>
                     <a href="/autentificare"><button>Autentificare</button></a>
                     <% } %>
+            <% if (typeof utilizator !== 'undefined' && utilizator && utilizator.rol === 'ADMIN') { %>
+                <a href="/admin"><button>Admin</button></a>
+            <% } %>
         </nav>
     </header>
 
     <main>
         <%- body %>
     </main>
+
+    <footer>
+        <hr>
+        <p>&copy; 2026 Ioana Șalaru. Toate drepturile rezervate.</p>
+    </footer>
 
 </body>
 

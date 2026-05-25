@@ -4,11 +4,14 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const mysql = require('mysql');
-const app = express();
-const port = 6789;
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+const csrf = require('csurf');
+
+const app = express();
+const port = 6789;
+
 
 const con = mysql.createConnection({
     host: "localhost",
@@ -17,10 +20,77 @@ const con = mysql.createConnection({
     database: "cumparaturi"
 });
 
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/images/');   
+    },
+    filename: (req, file, cb) => {
+        const nume = Date.now() + '-' + file.originalname.replace(/\s+/g, '-');
+        cb(null, nume);
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 },   
+    fileFilter: (req, file, cb) => {
+        const tipuriPermise = /jpeg|jpg|png|webp/;
+        const ok = tipuriPermise.test(file.mimetype);
+        if (ok) cb(null, true);
+        else cb(new Error('Doar imagini jpeg/jpg/png/webp sunt permise.'));
+    }
+});
+
+// Map pentru tentative de login: ip -> { incercari, banPanaLa, multiplicator }
+const loginAttempts = new Map();
+// Map pentru erori 404: ip -> { count, resetLa, banPanaLa }
+const erori404 = new Map();
+const MAX_LOGIN_ATTEMPTS = 5;
+const MAX_404_ERRORS = 15;
+const BAN_DURATA_INITIAL = 15 * 60 * 1000;      // 15 minute in ms
+const FEREASTRA_404 = 2 * 60 * 1000;             // 2 minute
+const BAN_404 = 10 * 60 * 1000;                  // 10 minute
+
+function getIP(req) {
+    return req.ip || req.connection.remoteAddress;
+}
+
 con.connect((err) => {
     if (err) console.log("Eroare conectare MySQL:", err);
     else console.log("Conectat la baza de date!");
 });
+
+// Middleware rate limiting 404
+function check404RateLimit(req, res, next) {
+    const ip = getIP(req);
+    const acum = Date.now();
+    const date = erori404.get(ip) || { count: 0, resetLa: acum + FEREASTRA_404, banPanaLa: 0 };
+
+    if (acum < date.banPanaLa) {
+        const minute = Math.ceil((date.banPanaLa - acum) / 60000);
+        return res.status(429).render('eroare', {
+            utilizator: req.session.utilizator,
+            mesaj: `Prea multe cereri suspecte. Acces blocat pentru încă ${minute} minute.`
+        });
+    }
+
+    next();
+}
+
+function checkLoginRateLimit(req, res, next) {
+    const ip = getIP(req);
+    const acum = Date.now();
+    const date = loginAttempts.get(ip) || { incercari: 0, banPanaLa: 0, multiplicator: 1 };
+
+    if (acum < date.banPanaLa) {
+        const minute = Math.ceil((date.banPanaLa - acum) / 60000);
+        req.session.mesajEroare = `Prea multe încercări eșuate. Încearcă din nou în ${minute} minute.`;
+        return res.redirect('/autentificare');
+    }
+
+    next();
+}
 
 
 app.set('view engine', 'ejs');
@@ -29,7 +99,33 @@ app.use(express.static('public'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser())
-app.use(session({ secret: 'cheie-secreta', resave: false, saveUninitialized: false }));
+app.use(session({
+    secret: 'cheie-secreta',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true, 
+        secure: false,  
+        sameSite: 'strict'
+    }}));
+app.use(csrf());
+app.use(check404RateLimit);
+
+function requireAuth(req, res, next) {
+    if (!req.session.utilizator) return res.redirect('/autentificare');
+    next();
+}
+
+function requireAdmin(req, res, next) {
+    if (!req.session.utilizator) return res.redirect('/autentificare');
+    if (req.session.utilizator.rol !== 'ADMIN') {
+        return res.status(403).render('eroare', {
+            utilizator: req.session.utilizator,
+            mesaj: '403 Forbidden — Nu ai acces la această pagină.'
+        });
+    }
+    next();
+}
 
 app.use((req, res, next) => {
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
@@ -55,38 +151,32 @@ app.get('/', (req, res) => {
     });
 });
 
-app.get('/chestionar', (req, res) => {
+app.get('/chestionar', async (req, res) => {
 
     if (!req.session.utilizator) {
         return res.redirect('/autentificare');
     }
 
-    const utilizator = req.session.utilizator;
-    const mesajEroare = req.session.mesajEroare;
-
-    req.session.mesajEroare = null;
-
-    fs.readFile('intrebari.json', 'utf8', (err, data) => {
-        if (err) {
-            return res.send("Eroare la citirea fișierului JSON");
-        }
-
+    try {
+        const data = await fs.promises.readFile('resurse/intrebari.json', 'utf8');  
         const listaIntrebari = JSON.parse(data);
 
         res.render('chestionar', {
             intrebari: listaIntrebari,
-            utilizator: utilizator,
-            mesajEroare: mesajEroare
+            utilizator: req.session.utilizator,
+            mesajEroare: req.session.mesajEroare,
+            csrfToken: req.csrfToken()
         });
-    });
+        req.session.mesajEroare = null;
+
+    } catch (err) {
+        res.send("Eroare la citirea fișierului JSON");
+    }
 });
 
-app.post('/rezultat-chestionar', (req, res) => {
-    fs.readFile('intrebari.json', 'utf8', (err, data) => {
-        if (err) {
-            return res.send("Eroare la citirea fișierului JSON");
-        }
-
+app.post('/rezultat-chestionar', async (req, res) => {
+    try {
+        const data = await fs.promises.readFile('resurse/intrebari.json', 'utf8');
         const listaIntrebari = JSON.parse(data);
 
         let scor = 0;
@@ -102,10 +192,11 @@ app.post('/rezultat-chestionar', (req, res) => {
             total: listaIntrebari.length,
             utilizator: req.session.utilizator
         });
-    });
+
+    } catch (err) {
+        res.send("Eroare la citirea fișierului JSON");
+    }
 });
-
-
 
 app.get('/autentificare', (req, res) => {
     if (req.session.utilizator) {
@@ -113,7 +204,7 @@ app.get('/autentificare', (req, res) => {
     }
     const mesajEroare = req.session.mesajEroare;
     req.session.mesajEroare = null;
-    res.render('autentificare', { mesajEroare: mesajEroare });
+    res.render('autentificare', { mesajEroare: mesajEroare, csrfToken: req.csrfToken() });
 });
 
 app.get('/logout', (req, res) => {
@@ -140,7 +231,8 @@ app.get('/creare-bd', (req, res) => {
                     titlu VARCHAR(100) NOT NULL,
                     autor VARCHAR(100) NOT NULL,
                     anAparitie DECIMAL(4) NOT NULL,
-                    pret DECIMAL(10,2) NOT NULL
+                    pret DECIMAL(10,2) NOT NULL,
+                    imagine VARCHAR(100)
                 )
             `;
 
@@ -158,29 +250,22 @@ app.get('/creare-bd', (req, res) => {
     res.redirect('/');
 });
 
-app.get('/inserare-bd', (req, res) => {
+app.get('/inserare-bd', async (req, res) => {
+    try {
+        const data = await fs.promises.readFile('resurse/carti.json', 'utf8');
+        const carti = JSON.parse(data);
 
-    const carti = [
-        ["1984", "George Orwell", 1949, 39.99],
-        ["Harry Potter și Piatra Filozofală", "J.K. Rowling", 1997, 44.90],
-        ["Mândrie și Prejudecată", "Jane Austen", 1813, 29.50],
-        ["Micul Prinț", "Antoine de Saint-Exupéry", 1943, 24.99],
-        ["Stăpânul Inelelor: Frăția Inelului", "J.R.R. Tolkien", 1954, 59.99],
-        ["Hobbitul", "J.R.R. Tolkien", 1937, 34.99],
-        ["Fahrenheit 451", "Ray Bradbury", 1953, 36.50],
-        ["Crimă și Pedepasă", "F.M. Dostoievski", 1866, 32.00],
-        ["Jocurile Foamei", "Suzanne Collins", 2008, 41.00],
-        ["Dune", "Frank Herbert", 1965, 55.00]
-    ];
+        const valori = carti.map(c => [c.titlu, c.autor, c.anAparitie, c.pret, c.imagine]);
+        const sql = "INSERT INTO produse (titlu, autor, anAparitie, pret, imagine) VALUES ?";
 
-
-    const sql = "INSERT INTO produse (titlu, autor, anAparitie, pret) VALUES ?";
-
-    con.query(sql, [carti], function (err, result) {
-        if (err) throw err;
-        console.log("Au fost inserate " + result.affectedRows + " cărți.");
-        res.redirect('/');
-    });
+        con.query(sql, [valori], function (err, result) {
+            if (err) throw err;
+            console.log("Au fost inserate " + result.affectedRows + " cărți.");
+            res.redirect('/');
+        });
+    } catch (err) {
+        res.send("Eroare la citirea carti.json");
+    }
 });
 
 app.get('/stergere-bd', (req, res) => {
@@ -198,7 +283,8 @@ app.get('/adaugare-cos', (req, res) => {
         return res.redirect('/autentificare');
     }
 
-    const idProdus = parseInt(req.query.id);
+    const idProdus = Number.parseInt(req.query.id, 10);
+    if (!Number.isInteger(idProdus)) return res.redirect('/');
 
     if (isNaN(idProdus)) return res.redirect('/');
 
@@ -217,53 +303,68 @@ function sanitizeInput(input) {
     return validator.escape(validator.trim(input));
 }
 
-app.post('/verificare-autentificare', (req, res) => {
+
+app.post('/verificare-autentificare', checkLoginRateLimit, async (req, res) => {
+    const ip = getIP(req);
     const utilizator = sanitizeInput(req.body.utilizator);
     const parola = req.body.parola;
 
-     if (!utilizator || !parola) {
-        req.session.mesajEroare = "Date invalide";
+    if (!utilizator || !parola) {
+        req.session.mesajEroare = "Te rugăm să introduci utilizator și parolă.";
         return res.redirect('/autentificare');
     }
 
-    fs.readFile('resurse/utilizatori.json', 'utf8', (err, data) => {
-        if (err) return res.send("Eroare fisier");
+    if (!validator.isLength(utilizator, { min: 3, max: 50 })) {
+        req.session.mesajEroare = "Numele de utilizator trebuie să aibă între 3 și 50 de caractere.";
+        return res.redirect('/autentificare');
+    }
 
+    try {
+        const data = await fs.promises.readFile('resurse/utilizatori.json', 'utf8');
         const utilizatori = JSON.parse(data);
+        const userGasit = utilizatori.find(u => u.utilizator === utilizator);
 
-        const userGasit = utilizatori.find(u =>
-            u.utilizator === utilizator);
+        const match = userGasit ? await bcrypt.compare(parola, userGasit.parola) : false;
 
-        
-        if (!userGasit) {
-            req.session.mesajEroare = "Utilizator sau parola incorecta";
-            return res.redirect('/autentificare');
-        }
+        if (match) {
+            loginAttempts.delete(ip);
 
-        try {
-            const match = await bcrypt.compare(parola, userGasit.parola);
+            req.session.utilizator = {
+                utilizator: userGasit.utilizator,
+                nume: userGasit.nume,
+                prenume: userGasit.prenume,
+                rol: userGasit.rol
+            };
+            req.session.mesajEroare = null;
+            return res.redirect('/');
 
-            if (match) {
-                req.session.utilizator = {
-                    utilizator: userGasit.utilizator,
-                    nume: userGasit.nume,
-                    prenume: userGasit.prenume
-                };
+        } else {
+            const acum = Date.now();
+            const date = loginAttempts.get(ip) || { incercari: 0, banPanaLa: 0, multiplicator: 1 };
+            date.incercari++;
 
-                req.session.mesajEroare = null;
-                return res.redirect('/');
-            } else {
-                req.session.mesajEroare = "Utilizator sau parola incorecta";
+            if (date.incercari >= MAX_LOGIN_ATTEMPTS) {
+                const durata = BAN_DURATA_INITIAL * date.multiplicator;
+                date.banPanaLa = acum + durata;
+                date.multiplicator = Math.min(date.multiplicator * 2, 8); 
+                date.incercari = 0;
+
+                const minute = Math.round(durata / 60000);
+                loginAttempts.set(ip, date);
+                req.session.mesajEroare = `Prea multe încercări eșuate. Acces blocat pentru ${minute} minute.`;
                 return res.redirect('/autentificare');
             }
 
-        } catch (e) {
-            return res.send("Eroare bcrypt");
+            const ramase = MAX_LOGIN_ATTEMPTS - date.incercari;
+            loginAttempts.set(ip, date);
+            req.session.mesajEroare = `Utilizator sau parolă incorectă. Mai ai ${ramase} încercări.`;
+            return res.redirect('/autentificare');
         }
-    });
+
+    } catch (e) {
+        return res.send("Eroare server");
+    }
 });
-
-
 
 app.get('/vizualizare-cos', (req, res) => {
 
@@ -298,7 +399,78 @@ app.get('/vizualizare-cos', (req, res) => {
         });
     });
 });
+    
+app.get('/admin', requireAdmin, (req, res) => {
+    res.render('admin', {
+        utilizator: req.session.utilizator,
+        mesaj: req.session.mesajAdmin || null,
+        csrfToken: req.csrfToken()     
+    });
+    req.session.mesajAdmin = null;
+});
+
+app.post('/admin/adaugare-produs', requireAdmin, upload.single('imagine'), (req, res) => {
+    const titlu = sanitizeInput(req.body.titlu);
+    const autor = sanitizeInput(req.body.autor);
+    const anAparitie = parseInt(req.body.anAparitie);
+    const pret = parseFloat(req.body.pret);
+    const imagine = req.file ? req.file.filename : null;
+
+    if (!titlu || !autor || isNaN(anAparitie) || isNaN(pret)) {
+        req.session.mesajAdmin = "Date invalide. Completează toate câmpurile.";
+        return res.redirect('/admin');
+    }
+
+    con.query(
+        "INSERT INTO produse (titlu, autor, anAparitie, pret, imagine) VALUES (?, ?, ?, ?, ?)",
+        [titlu, autor, anAparitie, pret, imagine],
+        function(err) {
+            if (err) {
+                req.session.mesajAdmin = "Eroare la adăugare în baza de date.";
+                return res.redirect('/admin');
+            }
+            req.session.mesajAdmin = "Produsul a fost adăugat cu succes!";
+            res.redirect('/admin');
+        }
+    );
+});
+
+// 404 handler — detecteaza scannere de vulnerabilitati
+app.use((req, res) => {
+    const ip = getIP(req);
+    const acum = Date.now();
+    const date = erori404.get(ip) || { count: 0, resetLa: acum + FEREASTRA_404, banPanaLa: 0 };
+
+    // Reseteaza contorul daca fereastra a expirat
+    if (acum > date.resetLa) {
+        date.count = 0;
+        date.resetLa = acum + FEREASTRA_404;
+    }
+
+    date.count++;
+
+    if (date.count >= MAX_404_ERRORS) {
+        date.banPanaLa = acum + BAN_404;
+        date.count = 0;
+        console.log(`[SECURITATE] IP ${ip} blocat pentru erori 404 excesive.`);
+    }
+
+    erori404.set(ip, date);
+
+    res.status(404).render('eroare', {
+        utilizator: req.session?.utilizator,
+        mesaj: '404 — Pagina nu a fost găsită.'
+    });
+});
 
 app.listen(port, () =>
     console.log(`Serverul rulează la adresa http://localhost:${port}/`)
 );
+
+// var x = new Map() - stochez data data pana la care are ban, numarul de incercari esuate
+//tema 3: folosim un middleware ca sa aflam ip-ul app.use((req,res,next)=>{
+//                                                          const ip = req.ip;
+//                                                          Console.log("am intrat in middleware")
+//                                                          next()               })
+// app.all('*',(req,res)) ->aici ii dau ban
+//

@@ -1,36 +1,28 @@
-<h2 class="table-title">Lista cărți</h2>
+<h2 class="table-title">Cărțile lunii</h2>
 
-<div class="table-container">
-    <table>
-        <thead>
-            <tr>
-                <th>Titlu</th>
-                <th>Autor</th>
-                <th>An</th>
-                <th>Preț</th>
-                <th>Adaugă în coș</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% if (produse && produse.length > 0) { %>
-                <% produse.forEach(p => { %>
-                    <tr>
-                        <td><%= p.titlu %></td>
-                        <td><%= p.autor %></td>
-                        <td><%= p.anAparitie %></td>
-                        <td><%= p.pret %> lei</td>
-                        <td>
-                            <% if (utilizator) { %>
-                                <a href="/adaugare-cos?id=<%= p.id %>"><button>Adaugă</button></a>
-                            <% } else { %>
-                                <button disabled>Login necesar</button>
-                            <% } %>
-                        </td>
-                    </tr>
-                <% }) %>
-            <% } else { %>
-                <tr><td colspan="5" style="text-align:center;">Nu există produse în baza de date</td></tr>
-            <% } %>
-        </tbody>
-    </table>
+<div class="carti-grid">
+    <% if (produse && produse.length > 0) { %>
+        <% produse.forEach(p => { %>
+            <div class="carte-card">
+                <div class="carte-img-wrap">
+                    <img src="/images/<%= p.imagine %>" alt="<%= p.titlu %>" class="carte-img">
+                </div>
+                <div class="carte-info">
+                    <h3 class="carte-titlu"><%= p.titlu %></h3>
+                    <p class="carte-autor"><%= p.autor %></p>
+                    <p class="carte-an"><%= p.anAparitie %></p>
+                    <p class="carte-pret"><%= p.pret %> lei</p>
+                    <% if (utilizator) { %>
+                        <a href="/adaugare-cos?id=<%= p.id %>">
+                            <button class="btn-cos">+ Adaugă în coș</button>
+                        </a>
+                    <% } else { %>
+                        <button disabled class="btn-cos">Login necesar</button>
+                    <% } %>
+                </div>
+            </div>
+        <% }) %>
+    <% } else { %>
+        <p style="text-align:center;">Nu există produse în baza de date.</p>
+    <% } %>
 </div>

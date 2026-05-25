@@ -4,6 +4,23 @@
         "parola": "$2b$10$x8qHRqyXuRMOYbhYawkQtunsq.xQzlPrGe12H0ER.BCQVU0W4vt7m",
         "nume": "Admin",
         "prenume": "Utilizator",
-        "email": "admin@example.com"
+        "email": "admin@example.com",
+        "rol":"ADMIN"
+    },
+    {
+        "utilizator": "ioana",
+        "parola": "$2b$10$SNJ0YpB9WQPfSI68uXn0XuZzAvMBIQEEPq/Lxr1p2WkfvMjVTAsrm",
+        "nume": "Șalaru",
+        "prenume": "Ioana",
+        "email": "ioana.salaru@student.tuiasi.ro",
+        "rol":"USER"
+    },
+    {
+        "utilizator": "adi",
+        "parola": "$2b$10$67NY1LqEXPzQAqRVB934heG4MAJ.vEdD1ZSAWCJZy09dR.J0Qqu42",
+        "nume": "Alexandrescu",
+        "prenume": "Adrian",
+        "email": "profudepw@tuiasi.ro",
+        "rol":"USER"
     }
 ]

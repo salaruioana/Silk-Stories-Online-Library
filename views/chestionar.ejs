@@ -1,6 +1,7 @@
-<h1>Chestionar despre cărți celebre</h1>
+<h1>Cât de bine cunoști cele mai iubite cărți din toate timpurile?</h1>
 
 <form action="/rezultat-chestionar" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <% for (var i = 0; i < intrebari.length; i++) { %>
         <div class="question-card">
             <h2><%= intrebari[i].intrebare %></h2>

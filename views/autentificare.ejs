@@ -1,10 +1,12 @@
+<div class="auth-card">
 <h2>Autentificare</h2>
 
 <% if (mesajEroare) { %>
-    <p style="color:red;"><%= mesajEroare %></p>
+    <p class="error-msg"><%= mesajEroare %></p>
 <% } %>
 
 <form action="/verificare-autentificare" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <label>
         Utilizator:
         <input type="text" name="utilizator" autocomplete="off">
@@ -16,3 +18,4 @@
 
     <button type="submit">Autentificare</button>
 </form>
+</div>

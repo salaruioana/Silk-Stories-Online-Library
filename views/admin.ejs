@@ -1,0 +1,23 @@
+<div class="auth-card" style="max-width: 560px;">
+    <h2>Panou Admin — Adaugă carte</h2>
+
+    <% if (mesaj) { %>
+        <p class="<%= mesaj.includes('succes') ? 'succes-msg' : 'error-msg' %>">
+            <%= mesaj %>
+        </p>
+    <% } %>
+
+    <form action="/admin/adaugare-produs?_csrf=<%= csrfToken %>" 
+        method="POST" 
+        enctype="multipart/form-data">
+        <label>Titlu <input type="text" name="titlu" required></label>
+        <label>Autor <input type="text" name="autor" required></label>
+        <label>An apariție <input type="number" name="anAparitie" min="1000" max="2099" required></label>
+        <label>Preț (lei) <input type="number" name="pret" step="0.01" min="0" required></label>
+        <label> Imagine (fișier)
+            <input type="file" name="imagine" accept="image/jpeg,image/png,image/webp">
+        </label>
+
+        <button type="submit">Adaugă carte</button>
+    </form>
+</div>

@@ -1,0 +1,12 @@
+[
+    { "titlu": "1984", "autor": "George Orwell", "anAparitie": 1949, "pret": 39.99, "imagine": "1984.jpeg" },
+    { "titlu": "Harry Potter și Piatra Filozofală", "autor": "J.K. Rowling", "anAparitie": 1997, "pret": 44.90, "imagine": "harrypotter.jpg" },
+    { "titlu": "Mândrie și Prejudecată", "autor": "Jane Austen", "anAparitie": 1813, "pret": 29.50, "imagine": "mandriesiprejudecata.jpg" },
+    { "titlu": "Micul Prinț", "autor": "Antoine de Saint-Exupéry", "anAparitie": 1943, "pret": 24.99, "imagine": "miculprint.png" },
+    { "titlu": "Stăpânul Inelelor: Frăția Inelului", "autor": "J.R.R. Tolkien", "anAparitie": 1954, "pret": 59.99, "imagine": "stapanulinelelor.jpg" },
+    { "titlu": "Hobbitul", "autor": "J.R.R. Tolkien", "anAparitie": 1937, "pret": 34.99, "imagine": "hobbitul.jpg" },
+    { "titlu": "Fahrenheit 451", "autor": "Ray Bradbury", "anAparitie": 1953, "pret": 36.50, "imagine": "fahrenheit451.jpg" },
+    { "titlu": "Crimă și Pedeapsă", "autor": "F.M. Dostoievski", "anAparitie": 1866, "pret": 32.00, "imagine": "crimasipedeapsa.jpg" },
+    { "titlu": "Jocurile Foamei", "autor": "Suzanne Collins", "anAparitie": 2008, "pret": 41.00, "imagine": "jocurilefoamei.jpg" },
+    { "titlu": "Dune", "autor": "Frank Herbert", "anAparitie": 1965, "pret": 55.00, "imagine": "dune.jpg" }
+]
