@@ -7,6 +7,7 @@
     <table>
         <thead>
             <tr>
+                <th>Imagine</th>
                 <th>Titlu</th>
                 <th>Autor</th>
                 <th>Cantitate</th>
@@ -17,6 +18,13 @@
             <% if (produse && produse.length > 0) { %>
                 <% produse.forEach(p => { %>
                     <tr>
+                        <td>
+                            <% if (p.imagine) { %>
+                                <img src="/images/<%= p.imagine %>" alt="<%= p.titlu %>" class="miniatura-cos">
+                            <% } else { %>
+                                <img src="/images/default-placeholder.png" alt="Fără imagine" class="miniatura-cos">
+                            <% } %>
+                        </td>
                         <td><%= p.titlu %></td>
                         <td><%= p.autor %></td>
                         <td><%= cos[String(p.id)] %>x</td>
@@ -25,13 +33,13 @@
                 <% }) %>
             <% } else { %>
                 <tr>
-                    <td colspan="4" style="text-align:center;">Coșul tău este gol </td>
+                    <td colspan="5" style="text-align:center;">Coșul tău este gol </td>
                 </tr>
             <% } %>
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="3"><strong>Total</strong></td>
+                <td colspan="4"><strong>Total</strong></td>
                 <td><strong><%= total.toFixed(2) %> lei</strong></td>
             </tr>
         </tfoot>
