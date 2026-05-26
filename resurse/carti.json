@@ -1,5 +1,82 @@
 [
     {
+        "titlu": "Dama cu camelii",
+        "autor": "Alexandre Dumas-fiul",
+        "anAparitie": 1975,
+        "pret": 39.9,
+        "imagine": "1779809887013-Screenshot-2026-05-26-183735.png"
+    },
+    {
+        "titlu": "La Paradisul femeilor",
+        "autor": "Emile Zola",
+        "anAparitie": 1924,
+        "pret": 39.9,
+        "imagine": "1779809818142-Screenshot-2026-05-26-183649.png"
+    },
+    {
+        "titlu": "Rivalitate",
+        "autor": "Edith Wharton",
+        "anAparitie": 1898,
+        "pret": 27.59,
+        "imagine": "1779809747376-Screenshot-2026-05-26-183540.png"
+    },
+    {
+        "titlu": "Rebecca",
+        "autor": "Daphne Du Maurier",
+        "anAparitie": 1938,
+        "pret": 27.98,
+        "imagine": "1779809528536-Screenshot-2026-05-26-183123.png"
+    },
+    {
+        "titlu": "Lorelei",
+        "autor": "Ionel Teodoreanu",
+        "anAparitie": 1935,
+        "pret": 35.56,
+        "imagine": "1779809385209-Screenshot-2026-05-26-182903.png"
+    },
+    {
+        "titlu": "La răscruce de vânturi",
+        "autor": "Emily Bronte",
+        "anAparitie": 1847,
+        "pret": 29.95,
+        "imagine": "1779809288028-Screenshot-2026-05-26-182719.png"
+    },
+    {
+        "titlu": "Emma",
+        "autor": "Jane Austen",
+        "anAparitie": 1815,
+        "pret": 29.98,
+        "imagine": "1779809047036-37949492-1.jpg"
+    },
+    {
+        "titlu": "Gențiane",
+        "autor": "Cella Serghi",
+        "anAparitie": 1970,
+        "pret": 39.9,
+        "imagine": "1779808951824-14_gentiane_.jpg"
+    },
+    {
+        "titlu": "Pânza de păianjen",
+        "autor": "Cella Serghi",
+        "anAparitie": 1938,
+        "pret": 39.9,
+        "imagine": "1779775318750-3157777256-0.png"
+    },
+    {
+        "titlu": "Mândrie și Prejudecată",
+        "autor": "Jane Austen",
+        "anAparitie": 1813,
+        "pret": 29.5,
+        "imagine": "mandriesiprejudecata.jpg"
+    },
+    {
+        "titlu": "Cleopatra si Frankenstein",
+        "autor": "Coco Mellors",
+        "anAparitie": 2023,
+        "pret": 44.99,
+        "imagine": "1779807188039-81l8cN+QDtL._AC_UF1000,1000_QL80_.jpg"
+    },
+    {
         "titlu": "Leagănul Pisicii",
         "autor": "Kurt Vonnegut",
         "anAparitie": 1989,
@@ -21,13 +98,6 @@
         "imagine": "1779775364728-35959740.jpg"
     },
     {
-        "titlu": "Pânza de păianjen",
-        "autor": "Cella Serghi",
-        "anAparitie": 1938,
-        "pret": 39.9,
-        "imagine": "1779775318750-3157777256-0.png"
-    },
-    {
         "titlu": "1984",
         "autor": "George Orwell",
         "anAparitie": 1949,
@@ -40,13 +110,6 @@
         "anAparitie": 1997,
         "pret": 44.9,
         "imagine": "harrypotter.jpg"
-    },
-    {
-        "titlu": "Mândrie și Prejudecată",
-        "autor": "Jane Austen",
-        "anAparitie": 1813,
-        "pret": 29.5,
-        "imagine": "mandriesiprejudecata.jpg"
     },
     {
         "titlu": "Micul Prinț",
