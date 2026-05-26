@@ -1,6 +1,6 @@
 <h2 class="table-title">Cărțile lunii</h2>
 
-<% if (mesajCos) { %>
+<% if (locals.mesajCos) { %>
     <p class="succes-msg">
         ✓ <%= mesajCos %>
     </p>
@@ -28,6 +28,6 @@
             </div>
         <% }) %>
     <% } else { %>
-        <p style="text-align:center;">Nu există produse în baza de date.</p>
+        <h2 style="text-align:center;">Nu există produse în baza de date.</h2>
     <% } %>
 </div>

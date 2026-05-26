@@ -101,7 +101,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser())
 app.use(session({
     secret: 'cheie-secreta',
-    resave: false,
+    resave: true,
     saveUninitialized: false,
     cookie: {
         httpOnly: true, 
@@ -136,19 +136,10 @@ app.get('/', (req, res) => {
     const mesajCos = req.session.mesajCos || null;
     req.session.mesajCos = null;
 
-    con.query("SELECT * FROM produse",[], function (err, result) {
-
-        if (err) {
-            console.log(err)
-            return res.render('index', {
-                utilizator: req.session.utilizator,
-                produse: []
-            });
-        }
-
+    con.query("SELECT * FROM produse", [], function (err, result) {
         res.render('index', {
             utilizator: req.session.utilizator,
-            produse: result || [],
+            produse: err ? [] : (result || []),
             mesajCos: mesajCos
         });
     });
@@ -428,11 +419,23 @@ app.post('/admin/adaugare-produs', requireAdmin, upload.single('imagine'), (req,
     con.query(
         "INSERT INTO produse (titlu, autor, anAparitie, pret, imagine) VALUES (?, ?, ?, ?, ?)",
         [titlu, autor, anAparitie, pret, imagine],
-        function(err) {
+        async function(err) {
             if (err) {
                 req.session.mesajAdmin = "Eroare la adăugare în baza de date.";
                 return res.redirect('/admin');
             }
+
+            // Sincronizare cu carti.json
+            try {
+                const data = await fs.promises.readFile('resurse/carti.json', 'utf8');
+                const carti = JSON.parse(data);
+                carti.unshift({ titlu, autor, anAparitie, pret, imagine });
+                await fs.promises.writeFile('resurse/carti.json', JSON.stringify(carti, null, 4), 'utf8');
+            } catch (errJson) {
+                console.error("Eroare la actualizarea carti.json:", errJson);
+                // Nu blocam redirectul — produsul e deja in BD
+            }
+
             req.session.mesajAdmin = "Produsul a fost adăugat cu succes!";
             res.redirect('/admin');
         }
