@@ -206,7 +206,7 @@ app.get('/logout', (req, res) => {
     res.redirect('/autentificare');
 });
 
-app.get('/creare-bd', (req, res) => {
+app.get('/creare-bd',requireAdmin, (req, res) => {
     const conLocal = mysql.createConnection({
         host: "localhost",
         user: "root",
@@ -244,7 +244,7 @@ app.get('/creare-bd', (req, res) => {
     res.redirect('/');
 });
 
-app.get('/inserare-bd', async (req, res) => {
+app.get('/inserare-bd',requireAdmin, async (req, res) => {
     try {
         const data = await fs.promises.readFile('resurse/carti.json', 'utf8');
         const carti = JSON.parse(data);
@@ -252,17 +252,23 @@ app.get('/inserare-bd', async (req, res) => {
         const valori = carti.map(c => [c.titlu, c.autor, c.anAparitie, c.pret, c.imagine]);
         const sql = "INSERT INTO produse (titlu, autor, anAparitie, pret, imagine) VALUES ?";
 
-        con.query(sql, [valori], function (err, result) {
-            if (err) throw err;
-            console.log("Au fost inserate " + result.affectedRows + " cărți.");
-            res.redirect('/');
+        con.query("DELETE FROM produse", function(err) {  
+            if (err) return res.send("Eroare la ștergere");
+
+            con.query("INSERT INTO produse (titlu, autor, anAparitie, pret, imagine) VALUES ?", 
+                [valori], function(err, result) {
+                    if (err) return res.send("Eroare la inserare");
+                    console.log("Au fost inserate " + result.affectedRows + " cărți.");
+                    res.redirect('/');
+                }
+            );
         });
     } catch (err) {
         res.send("Eroare la citirea carti.json");
     }
 });
 
-app.get('/stergere-bd', (req, res) => {
+app.get('/stergere-bd',requireAdmin, (req, res) => {
 
     con.query("DROP TABLE IF EXISTS produse", function (err, result) {
         if (err) throw err;
@@ -413,6 +419,34 @@ app.post('/admin/adaugare-produs', requireAdmin, upload.single('imagine'), (req,
 
     if (!titlu || !autor || isNaN(anAparitie) || isNaN(pret)|| !imagine ) {
         req.session.mesajAdmin = "Date invalide. Completează toate câmpurile.";
+        return res.redirect('/admin');
+    }
+    if (!validator.isLength(titlu, { min: 3, max: 100 })) {
+        req.session.mesajAdmin = "Titlul trebuie să aibă între 3 și 100 de caractere.";
+        return res.redirect('/admin');
+    }
+
+    if (!validator.isLength(autor, { min: 3, max: 100 })) {
+        req.session.mesajAdmin = "Autorul trebuie să aibă între 3 și 100 de caractere.";
+        return res.redirect('/admin');
+    }
+
+    if (anAparitie < 1000 || anAparitie > 2099) {
+        req.session.mesajAdmin = "An de apariție invalid.";
+        return res.redirect('/admin');
+    }
+
+    if (pret <= 0) {
+        req.session.mesajAdmin = "Prețul trebuie să fie pozitiv.";
+        return res.redirect('/admin');
+    }
+
+    if (!/^[\p{L}\p{N}\s\-.,':!?()]+$/u.test(titlu)) {
+        req.session.mesajAdmin = "Titlul conține caractere nepermise.";
+        return res.redirect('/admin');
+    }
+    if (!/^[\p{L}\p{N}\s\-.,':!?()]+$/u.test(autor)) {
+        req.session.mesajAdmin = "Autorul conține caractere nepermise.";
         return res.redirect('/admin');
     }
 
