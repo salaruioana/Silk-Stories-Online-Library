@@ -1,5 +1,19 @@
 [
     {
+        "titlu": "Intr-un camin de domnisoare",
+        "autor": "Anișoara Odeanu",
+        "anAparitie": 1948,
+        "pret": 39.9,
+        "imagine": "1779876196162-Screenshot-2026-05-27-130114.png"
+    },
+    {
+        "titlu": "Poveste de iubire. Povestea lui Oliver",
+        "autor": "Erich Segal",
+        "anAparitie": 1970,
+        "pret": 39.98,
+        "imagine": "1779875950282-Screenshot-2026-05-27-125853.png"
+    },
+    {
         "titlu": "Dama cu camelii",
         "autor": "Alexandre Dumas-fiul",
         "anAparitie": 1975,

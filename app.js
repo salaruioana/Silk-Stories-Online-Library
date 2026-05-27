@@ -433,7 +433,6 @@ app.post('/admin/adaugare-produs', requireAdmin, upload.single('imagine'), (req,
                 await fs.promises.writeFile('resurse/carti.json', JSON.stringify(carti, null, 4), 'utf8');
             } catch (errJson) {
                 console.error("Eroare la actualizarea carti.json:", errJson);
-                // Nu blocam redirectul — produsul e deja in BD
             }
 
             req.session.mesajAdmin = "Produsul a fost adăugat cu succes!";
