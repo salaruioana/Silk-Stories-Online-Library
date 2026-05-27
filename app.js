@@ -55,6 +55,21 @@ const BAN_404 = 10 * 60 * 1000;                  // 10 minute
 function getIP(req) {
     return req.ip || req.connection.remoteAddress;
 }
+function penalizeLogin(ip) {
+    const acum = Date.now();
+    const date = loginAttempts.get(ip) || { incercari: 0, banPanaLa: 0, multiplicator: 1 };
+
+    date.incercari++;
+
+    if (date.incercari >= MAX_LOGIN_ATTEMPTS) {
+        const durata = BAN_DURATA_INITIAL * date.multiplicator;
+        date.banPanaLa = acum + durata;
+        date.multiplicator = Math.min(date.multiplicator * 2, 8);
+        date.incercari = 0;
+    }
+
+    loginAttempts.set(ip, date);
+}
 
 con.connect((err) => {
     if (err) console.log("Eroare conectare MySQL:", err);
@@ -91,7 +106,6 @@ function checkLoginRateLimit(req, res, next) {
 
     next();
 }
-
 
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
@@ -312,11 +326,13 @@ app.post('/verificare-autentificare', checkLoginRateLimit, async (req, res) => {
 
     if (!utilizator || !parola) {
         req.session.mesajEroare = "Te rugăm să introduci utilizator și parolă.";
+        penalizeLogin(ip);
         return res.redirect('/autentificare');
     }
 
     if (!validator.isLength(utilizator, { min: 3, max: 50 })) {
         req.session.mesajEroare = "Numele de utilizator trebuie să aibă între 3 și 50 de caractere.";
+        penalizeLogin(ip);
         return res.redirect('/autentificare');
     }
 
@@ -340,27 +356,14 @@ app.post('/verificare-autentificare', checkLoginRateLimit, async (req, res) => {
             return res.redirect('/');
 
         } else {
-            const acum = Date.now();
+            penalizeLogin(ip);
+
             const date = loginAttempts.get(ip) || { incercari: 0, banPanaLa: 0, multiplicator: 1 };
-            date.incercari++;
-
-            if (date.incercari >= MAX_LOGIN_ATTEMPTS) {
-                const durata = BAN_DURATA_INITIAL * date.multiplicator;
-                date.banPanaLa = acum + durata;
-                date.multiplicator = Math.min(date.multiplicator * 2, 8); 
-                date.incercari = 0;
-
-                const minute = Math.round(durata / 60000);
-                loginAttempts.set(ip, date);
-                req.session.mesajEroare = `Prea multe încercări eșuate. Acces blocat pentru ${minute} minute.`;
-                return res.redirect('/autentificare');
-            }
-
             const ramase = MAX_LOGIN_ATTEMPTS - date.incercari;
-            loginAttempts.set(ip, date);
+
             req.session.mesajEroare = `Utilizator sau parolă incorectă. Mai ai ${ramase} încercări.`;
             return res.redirect('/autentificare');
-        }
+                }
 
     } catch (e) {
         return res.send("Eroare server");
