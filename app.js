@@ -411,7 +411,7 @@ app.post('/admin/adaugare-produs', requireAdmin, upload.single('imagine'), (req,
     const pret = parseFloat(req.body.pret);
     const imagine = req.file ? req.file.filename : null;
 
-    if (!titlu || !autor || isNaN(anAparitie) || isNaN(pret)) {
+    if (!titlu || !autor || isNaN(anAparitie) || isNaN(pret)|| !imagine ) {
         req.session.mesajAdmin = "Date invalide. Completează toate câmpurile.";
         return res.redirect('/admin');
     }
