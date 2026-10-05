@@ -26,10 +26,10 @@ A full-stack web application for managing a virtual library, developed as a univ
 
 ## Screenshots
 
-![Personal Website - Screenshot 1](Screenshot%202026-10-05%120010.png)
+![Personal Website - Screenshot 1](Screenshot%202026-10-05%20120010.png)
 
-![Personal Website - Screenshot 2](Screenshot%202026-10-05%120225.png)
+![Personal Website - Screenshot 2](Screenshot%202026-10-05%20120225.png)
 
-![Personal Website - Screenshot 3](Screenshot%202026-10-05%120306.png)
+![Personal Website - Screenshot 3](Screenshot%202026-10-05%20120306.png)
 
-![Personal Website - Screenshot 4](Screenshot%202026-10-05%120322.png)
+![Personal Website - Screenshot 4](Screenshot%202026-10-05%20120322.png)
